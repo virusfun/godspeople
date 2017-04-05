@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html>
+<html class="mouse">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>parallax.js</title>
+    <!-- Behavioral Meta Data -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!-- Core Meta Data -->
+    <meta name="author" content="Matthew Wagerfield">
+    <meta name="description" content="Simple, lightweight Parallax Engine that reacts to the orientation of a smart device">
+    <meta name="keywords" content="parallax,javascript,jquery,zepto,plugin">
+    <!-- Open Graph Meta Data -->
+    <meta property="og:description" content="Simple, lightweight Parallax Engine that reacts to the orientation of a smart device">
+    <meta property="og:image" content="http://wagerfield.github.io/parallax/assets/images/thumbnail.png">
+    <meta property="og:site_name" content="parallax.js">
+    <meta property="og:title" content="parallax.js">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://wagerfield.github.io/parallax/index.html">
+    <!-- Twitter Card Meta Data -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="http://wagerfield.github.io/parallax/index.html">
+    <meta name="twitter:creator" content="@wagerfield">
+    <meta name="twitter:title" content="parallax.js">
+    <meta name="twitter:description" content="Simple, lightweight Parallax Engine that reacts to the orientation of a smart device">
+    <meta name="twitter:image" content="http://wagerfield.github.io/parallax/assets/images/thumbnail.png">
+    <!-- Styles -->    
+    <!--<link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Rosario:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">-->
+    <link rel="stylesheet" href="./assets/fonts/simple-line-icons/simple-line-icons.min.css">
+    <link rel="stylesheet" type="text/css" href="./assets/css/styles.css">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="http://matthew.wagerfield.com/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="http://matthew.wagerfield.com/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="http://wagerfield.github.io/parallax/favicon.png" type="image/png">
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://matthew.wagerfield.com/parallax/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://matthew.wagerfield.com/parallax/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://matthew.wagerfield.com/parallax/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="http://matthew.wagerfield.com/parallax/apple-touch-icon-57x57-precomposed.png">
+    <!-- Apple Startup Images -->
+    <link rel="apple-touch-startup-image" href="http://matthew.wagerfield.com/parallax/apple-touch-startup-image-320x460.png" media="(device-width: 320px)">
+    <link rel="apple-touch-startup-image" href="http://matthew.wagerfield.com/parallax/apple-touch-startup-image-640x920.png" media="(device-width: 320px) and (-webkit-device-pixel-ratio: 2)">
+    <link rel="apple-touch-startup-image" href="http://matthew.wagerfield.com/parallax/apple-touch-startup-image-768x1004.png" media="(device-width: 768px) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="http://matthew.wagerfield.com/parallax/apple-touch-startup-image-748x1024.png" media="(device-width: 768px) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="http://matthew.wagerfield.com/parallax/apple-touch-startup-image-1536x2008.png" media="(device-width: 1536px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)">
+    <link rel="apple-touch-startup-image" href="http://matthew.wagerfield.com/parallax/apple-touch-startup-image-2048x1496.png" media="(device-width: 1536px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)">
+
+</head>
+<body>
+    <div id="fb-root"></div>
+    <div id="container" class="wrapper">
+        <div id="scene" class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15">
+            <div class="layer" data-depth="0.00"></div>
+            <div class="layer" data-depth="0.1">
+                <img id="cover" src="./images/background.jpg" />
+            </div>
+            <div class="layer" data-depth="0.20"><h1 class="title">Gods<em>People</em></h1></div>
+        </div>
+        <section id="about" class="wrapper about accelerate hide">
+            <div class="cell accelerate">
+                <div class="cables center accelerate">
+                    <div class="panel accelerate">
+                        <header>
+                            <h1>parallax<em>.js</em></h1>
+                        </header>
+                        <p>WOW, that's deep man! <strong>parallax.js</strong> reacts to the orientation of your smart device, offsetting layers depending on their depth within a scene... Oh, you don't have a smart device? No worries, if no gyroscope or motion detection hardware is available, <strong>parallax.js</strong> uses the position of your cursor instead. Radical.</p>
+                        <p>This project is a collaboration between<br><a href="http://matthew.wagerfield.com/" target="_blank">Matthew Wagerfield</a> &amp; <a href="http://cargocollective.com/whydontwetry" target="_blank">Claudio Guglieri</a>.</p>
+                        <div class="social">
+                            <a href="https://twitter.com/wagerfield" class="twitter-follow-button" data-show-count="false">Follow <span class="handle">@wagerfield</span></a>
+                            <a href="https://twitter.com/claudioguglieri" class="twitter-follow-button" data-show-count="false">Follow <span class="handle">@claudioguglieri</span></a>
+                        </div>
+                        <ul class="links">
+                            <li><a class="download" href="https://github.com/wagerfield/parallax/archive/master.zip">Download</a></li>
+                            <li><a class="github" target="_blank" href="https://github.com/wagerfield/parallax">GitHub</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <button id="toggle" class="toggle i">
+            <div class="cross">
+                <div class="x"></div>
+                <div class="y"></div>
+            </div>
+        </button>
+        <div id="prompt" class="wrapper prompt hide accelerate">
+            <div class="cell accelerate">
+                <div class="panel center unselectable accelerate">
+                    <button id="dismiss" class="dismiss">
+                        <div class="cross">
+                            <div class="x"></div>
+                            <div class="y"></div>
+                        </div>
+                    </button>
+                    <div class="tilt-scene">
+                        <img class="tilt" src="./assets/img/tilt.png">
+                    </div>
+                    <h2>Tilting is fun!</h2>
+                    <p>For the best experience, check out this site on a mobile or tablet equipped with a gyroscope</p>
+                    <p>(iPads are the coolest)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Scripts -->
+    <script src="./assets/js/libraries.min.js"></script>
+    <script src="./assets/js/jquery.parallax.js"></script>
+    <script type="text/javascript">
+
+	// jQuery Selections
+	var $html = $('html'),
+			$container = $('#container'),
+			$prompt = $('#prompt'),
+			$toggle = $('#toggle'),
+			$about = $('#about'),
+			$scene = $('#scene');
+
+	// Hide browser menu.
+	(function() {
+		setTimeout(function(){window.scrollTo(0,0);},0);
+	})();
+
+	// Setup FastClick.
+	FastClick.attach(document.body);
+
+	// Add touch functionality.
+	if (Hammer.HAS_TOUCHEVENTS) {
+		$container.hammer({drag_lock_to_axis: true});
+		_.tap($html, 'a,button,[data-tap]');
+	}
+
+	// Add touch or mouse class to html element.
+	$html.addClass(Hammer.HAS_TOUCHEVENTS ? 'touch' : 'mouse');
+
+	// Resize handler.
+	(resize = function() {
+		$scene[0].style.width = window.innerWidth + 'px';
+		$scene[0].style.height = window.innerHeight + 'px';
+		if (!$prompt.hasClass('hide')) {
+			if (window.innerWidth < 600) {
+				$toggle.addClass('hide');
+			} else {
+				$toggle.removeClass('hide');
+			}
+		}
+
+		var img = new Image();
+		img.src = $('#cover').attr('src');
+		img.onload = function () {
+		    var w = img.width;
+		    var h = img.height;
+
+		    function setCover(id, w, h) {
+		        var _height = $(id).parent().height(),
+                    _width = $(id).parent().width(),
+                    ratio = h / w;
+
+		        if (_height / _width > ratio) {
+		            id.style.height = _height * 1.1 + 'px';
+		            id.style.width = _height / ratio * 1.1 + 'px';
+		            //id.style.marginLeft = -0.5 * (_height / ratio - window.innerWidth) + 'px';
+
+		        } else {
+		            id.style.width = _width * 1.1 + 'px';
+		            id.style.height = _width * ratio * 1.1 + 'px';
+		        }
+
+		        id.style.left = (_width - parseInt(id.style.width)) / 2 + 'px';
+		        id.style.top = (_height - parseInt(id.style.height)) / 2 + 'px';
+		    }
+
+		    setCover($('#cover')[0], w, h)
+		}
+	})();
+
+	// Attach window listeners.
+	window.onresize = _.debounce(resize, 200);
+	window.onscroll = _.debounce(resize, 200);
+
+	// Listen for toggle click event.
+	$toggle.on('click', function (event) {
+
+	    function showDetails() {
+	        $about.removeClass('hide');
+	        $toggle.removeClass('i');
+	    }
+
+	    function hideDetails() {
+	        $about.addClass('hide');
+	        $toggle.addClass('i');
+	    }
+
+		$toggle.hasClass('i') ? showDetails() : hideDetails();
+	});
+
+	// Pretty simple huh?
+	$scene.parallax();
+
+	// Check for orientation support.
+	setTimeout(function() {
+		if ($scene.data('mode') === 'cursor') {
+			$prompt.removeClass('hide');
+			if (window.innerWidth < 600) $toggle.addClass('hide');
+			$prompt.on('click', function(event) {
+				$prompt.addClass('hide');
+				if (window.innerWidth < 600) {
+					setTimeout(function() {
+						$toggle.removeClass('hide');
+					},1200);
+				}
+			});
+		}
+	}, 1000);
+    </script>
+
+</body>
+</html>
