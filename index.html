@@ -11,7 +11,7 @@
     <meta name="author" content="Matthew Wagerfield">
     <meta name="description" content="Simple, lightweight Parallax Engine that reacts to the orientation of a smart device">
     <meta name="keywords" content="godspeople">
-    <!-- Styles -->    
+    <!-- Styles -->
     <!--<link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Rosario:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">-->
     <link rel="stylesheet" href="./assets/fonts/simple-line-icons/simple-line-icons.min.css">
     <link rel="stylesheet" type="text/css" href="./assets/css/swiper.min.css">
@@ -177,168 +177,184 @@
     <script src="./assets/js/APlayer.min.js"></script>
     <script src="./assets/js/jquery.parallax.js"></script>
     <script type="text/javascript">
+        $(document).ready(function () {
+            // jQuery Selections
+            var $html = $('html'),
+                    $container = $('#container'),
+                    $prompt = $('#prompt'),
+                    $toggle = $('#toggle'),
+                    $about = $('#about'),
+                    $scene = $('#scene');
 
-	// jQuery Selections
-	var $html = $('html'),
-			$container = $('#container'),
-			$prompt = $('#prompt'),
-			$toggle = $('#toggle'),
-			$about = $('#about'),
-			$scene = $('#scene');
+            // Hide browser menu.
+            (function () {
+                setTimeout(function () { window.scrollTo(0, 0); }, 0);
+            })();
 
-	// Hide browser menu.
-	(function() {
-		setTimeout(function(){window.scrollTo(0,0);},0);
-	})();
+            // Setup FastClick.
+            FastClick.attach(document.body);
 
-	// Setup FastClick.
-	FastClick.attach(document.body);
+            // Add touch functionality.
+            if (Hammer.HAS_TOUCHEVENTS) {
+                $container.hammer({ drag_lock_to_axis: true });
+                _.tap($html, 'a,button,[data-tap]');
+            }
 
-	// Add touch functionality.
-	if (Hammer.HAS_TOUCHEVENTS) {
-		$container.hammer({drag_lock_to_axis: true});
-		_.tap($html, 'a,button,[data-tap]');
-	}
+            // Add touch or mouse class to html element.
+            $html.addClass(Hammer.HAS_TOUCHEVENTS ? 'touch' : 'mouse');
 
-	// Add touch or mouse class to html element.
-	$html.addClass(Hammer.HAS_TOUCHEVENTS ? 'touch' : 'mouse');
+            // Resize handler.
+            (resize = function () {
+                $scene[0].style.width = window.innerWidth + 'px';
+                $scene[0].style.height = window.innerHeight + 'px';
+                if (!$prompt.hasClass('hide')) {
+                    if (window.innerWidth < 600) {
+                        $toggle.addClass('hide');
+                    } else {
+                        $toggle.removeClass('hide');
+                    }
+                }
 
-	// Resize handler.
-	(resize = function() {
-		$scene[0].style.width = window.innerWidth + 'px';
-		$scene[0].style.height = window.innerHeight + 'px';
-		if (!$prompt.hasClass('hide')) {
-			if (window.innerWidth < 600) {
-				$toggle.addClass('hide');
-			} else {
-				$toggle.removeClass('hide');
-			}
-		}
+                var img = new Image();
+                img.src = $('#cover').attr('src');
+                img.onload = function () {
+                    var w = img.width;
+                    var h = img.height;
 
-		var img = new Image();
-		img.src = $('#cover').attr('src');
-		img.onload = function () {
-		    var w = img.width;
-		    var h = img.height;
+                    function setCover(id, w, h) {
+                        var _height = $(id).parent().height(),
+                            _width = $(id).parent().width(),
+                            ratio = h / w;
 
-		    function setCover(id, w, h) {
-		        var _height = $(id).parent().height(),
-                    _width = $(id).parent().width(),
-                    ratio = h / w;
+                        if (_height / _width > ratio) {
+                            id.style.height = _height * 1.1 + 'px';
+                            id.style.width = _height / ratio * 1.1 + 'px';
+                            //id.style.marginLeft = -0.5 * (_height / ratio - window.innerWidth) + 'px';
 
-		        if (_height / _width > ratio) {
-		            id.style.height = _height * 1.1 + 'px';
-		            id.style.width = _height / ratio * 1.1 + 'px';
-		            //id.style.marginLeft = -0.5 * (_height / ratio - window.innerWidth) + 'px';
+                        } else {
+                            id.style.width = _width * 1.1 + 'px';
+                            id.style.height = _width * ratio * 1.1 + 'px';
+                        }
 
-		        } else {
-		            id.style.width = _width * 1.1 + 'px';
-		            id.style.height = _width * ratio * 1.1 + 'px';
-		        }
+                        id.style.left = (_width - parseInt(id.style.width)) / 2 + 'px';
+                        id.style.top = (_height - parseInt(id.style.height)) / 2 + 'px';
+                    }
 
-		        id.style.left = (_width - parseInt(id.style.width)) / 2 + 'px';
-		        id.style.top = (_height - parseInt(id.style.height)) / 2 + 'px';
-		    }
+                    setCover($('#cover')[0], w, h)
+                }
+            })();
 
-		    setCover($('#cover')[0], w, h)
-		}
-	})();
+            // Attach window listeners.
+            window.onresize = _.debounce(resize, 200);
+            window.onscroll = _.debounce(resize, 200);
 
-	// Attach window listeners.
-	window.onresize = _.debounce(resize, 200);
-	window.onscroll = _.debounce(resize, 200);
+            // Listen for toggle click event.
+            $toggle.on('click', function (event) {
 
-	// Listen for toggle click event.
-	$toggle.on('click', function (event) {
+                function showDetails() {
+                    $about.removeClass('hide');
+                    $toggle.removeClass('i');
+                }
 
-	    function showDetails() {
-	        $about.removeClass('hide');
-	        $toggle.removeClass('i');
-	    }
+                function hideDetails() {
+                    $about.addClass('hide');
+                    $toggle.addClass('i');
+                }
 
-	    function hideDetails() {
-	        $about.addClass('hide');
-	        $toggle.addClass('i');
-	    }
+                $toggle.hasClass('i') ? showDetails() : hideDetails();
+            });
 
-		$toggle.hasClass('i') ? showDetails() : hideDetails();
-	});
+            // Pretty simple huh?
+            $scene.parallax();
 
-	// Pretty simple huh?
-	$scene.parallax();
+            // Check for orientation support.
+            setTimeout(function () {
+                if ($scene.data('mode') === 'cursor') {
+                    $prompt.removeClass('hide');
+                    if (window.innerWidth < 600) $toggle.addClass('hide');
+                    $prompt.on('click', function (event) {
+                        $prompt.addClass('hide');
+                        if (window.innerWidth < 600) {
+                            setTimeout(function () {
+                                $toggle.removeClass('hide');
+                            }, 1200);
+                        }
+                    });
+                }
+            }, 1000);
 
-	// Check for orientation support.
-	setTimeout(function() {
-		if ($scene.data('mode') === 'cursor') {
-			$prompt.removeClass('hide');
-			if (window.innerWidth < 600) $toggle.addClass('hide');
-			$prompt.on('click', function(event) {
-				$prompt.addClass('hide');
-				if (window.innerWidth < 600) {
-					setTimeout(function() {
-						$toggle.removeClass('hide');
-					},1200);
-				}
-			});
-		}
-	}, 1000);
-
-	var swiper1 = new Swiper('.swiper1', {
-	    autoHeight: true,
-	    nextButton: '.button-next1',
-	    prevButton: '.button-prev1'
-	});
-
-	var swiper2 = new Swiper('.swiper2', {
-	    autoHeight: true,
-	    nextButton: '.button-next2',
-	    prevButton: '.button-prev2'
-	});
-
-	var swiper3 = new Swiper('.swiper3', {
-	    loop: true,
-	    onTransitionEnd: function (swiper) {
-	        var slide = swiper.slides[swiper.activeIndex];
-	        var src = $(slide).find('img').attr('src');
-	        $('#cover').attr('src', src);
-	    }
-	});
-
-	$('.links li').click(function () {
-	    $('.panel-item').removeClass('active');
-	    var tab = $(this).attr('tab');
-	    $(tab).addClass('active');
-	    swiper1.update();
-	    swiper2.update();
-	    swiper3.update();
-	})
-
-	var ap1 = new APlayer({
-	    element: document.getElementById('player'),
-	    narrow: false,
-	    autoplay: true,
-	    showlrc: false,
-	    mutex: true,
-	    theme: '#e6d0b2',
-	    preload: 'metadata',
-	    mode: 'circulation',
-	    listmaxheight: '120px',
-	    music: [
-            {
-                title: 'Amazing Grace',
-                author: 'Judy Collins',
-                url: './assets/muisc/Amazing Grace.mp3',
-                pic: './assets/muisc/Amazing Grace.jpg'
-            },
-             {
-                 title: 'Pie Jesu',
-                 author: 'Sarah Brightman',
-                 url: './assets/muisc/Pie Jesu.mp3',
-                 pic: './assets/muisc/Pie Jesu.jpg'
-             }
-	    ]
-	});
-
+            //tabs
+            $('.links li').click(function () {
+                $('.panel-item').removeClass('active');
+                var tab = $(this).attr('tab');
+                $(tab).addClass('active');
+                swiper1.update();
+                swiper2.update();
+                swiper3.update();
+            })
+            function fixd400SwiperBug(swiper) {
+                if (window.innerWidth < 400) {
+                    var slide = swiper.slides[0];
+                    $(slide).parent().width($(slide).width());
+                }
+            }
+            //tab1
+            var swiper1 = new Swiper('.swiper1', {
+                autoHeight: true,
+                nextButton: '.button-next1',
+                prevButton: '.button-prev1',
+                onInit: function (swiper) {
+                    fixd400SwiperBug(swiper)
+                }
+            });
+            //tab2
+            var swiper2 = new Swiper('.swiper2', {
+                autoHeight: true,
+                nextButton: '.button-next2',
+                prevButton: '.button-prev2',
+                onInit: function (swiper) {
+                    fixd400SwiperBug(swiper)
+                }
+            });
+            //tab3
+            var swiper3 = new Swiper('.swiper3', {
+                loop: true,
+                onInit: function (swiper) {
+                    fixd400SwiperBug(swiper)
+                },
+                onTransitionEnd: function (swiper) {
+                    var slide = swiper.slides[swiper.activeIndex];
+                    var src = $(slide).find('img').attr('src');
+                    $('#cover').attr('src', src);
+                }
+            });
+            //tab4
+            var ap1 = new APlayer({
+                element: document.getElementById('player'),
+                narrow: false,
+                autoplay: true,
+                showlrc: false,
+                mutex: true,
+                theme: '#e6d0b2',
+                preload: 'metadata',
+                mode: 'circulation',
+                listmaxheight: '120px',
+                music: [
+                    {
+                        title: 'Amazing Grace',
+                        author: 'Judy Collins',
+                        url: './assets/muisc/Amazing Grace.mp3',
+                        pic: './assets/muisc/Amazing Grace.jpg'
+                    },
+                     {
+                         title: 'Pie Jesu',
+                         author: 'Sarah Brightman',
+                         url: './assets/muisc/Pie Jesu.mp3',
+                         pic: './assets/muisc/Pie Jesu.jpg'
+                     }
+                ]
+            });
+        })
     </script>
 
 </body>
