@@ -2160,4 +2160,7 @@ html.touch .links a.tap {
 .aplayer div.aplayer-volume-wrap {
      display:none !important;
 }
+.aplayer .aplayer-list {
+    min-height:65px;
+}
 
