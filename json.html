@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <button id="go">go</button>
+    <button id="dic">dic</button>
+    <div id="content"></div>
+    <script src="./assets/js/libraries.min.js"></script>
+    <script type="text/javascript">
+        String.prototype.trim = function () {
+            return this.replace(/(^\s*)|(\s*$)/g, "");
+        }
+
+        String.prototype.startWith = function (str) {
+            if (str == null || str == "" || this.length == 0 || str.length > this.length)
+                return false;
+            if (this.substr(0, str.length) == str)
+                return true;
+            else
+                return false;
+            return true;
+        }
+
+        function saveFile(fileName, content) {
+            var fso, tf;
+            try {
+                fso = new ActiveXObject("Scripting.FileSystemObject");
+                tf = fso.CreateTextFile("E:\\a.work\\godspeople2\\bible\\" + fileName + ".json", true, true);
+                tf.WriteLine(content);
+            } catch (err) {
+                console.log(err);
+            } finally {
+                tf.Close();
+            }
+        }
+
+        $(document).ready(function () {
+            $('#go').click(function () {
+                $.get('基督教《圣经》新旧约全书.txt').done(function (rst) {
+                    var array = rst.split('\n')
+
+                    var DIC = [];
+
+                    var FN = '';
+                    var FC = [];
+
+                    for (var i = 0; i < array.length; i++) {
+                        var item = array[i].trim();
+                        //directory
+                        if (item != '' && array[i].startWith(' ')) {
+                            var chapter = item.substring(0, item.indexOf('（'));
+                            var summary = item.substring(item.indexOf('（'));
+                            var di = { chapter: chapter, summary: summary, sections: [] }
+                            DIC.push(di)
+                        }
+                        //content
+                        if (item != '' && item.indexOf(':') != -1) {
+                            var a = item.split(' ');
+                            var b = a[0].split(':');
+                            var c = b[0].replace(/[^\u4e00-\u9fa5]/gi, "")
+                            var fileName = b[0];
+                            var section = a[0].replace(c, "")
+                            var zh = a[1]
+
+                            if (FN != fileName) {
+                                if (FN != '') {
+                                    var json_str = JSON.stringify(FC);
+                                    saveFile(FN, json_str);
+                                    $('#content').append('<p>' + FN + ' over!</p>');
+                                    DIC[DIC.length - 1].sections.push(FN);
+                                }
+                                FN = fileName
+                                FC = [];
+                            }
+
+                            var di = { 'section': section, 'zh': zh, 'en': '' };
+                            FC.push(di);
+                        }
+                    }
+
+                    for (var i = 0; i < DIC.length; i++)
+                    {
+                        if (DIC[i + 1] != undefined) {
+                            DIC[i].sections.push(DIC[i + 1].sections[0]);
+                            DIC[i + 1].sections.splice(0, 1);
+                        }
+                    }
+
+                    var json_str2 = JSON.stringify(DIC);
+                    saveFile('dic', json_str2);
+                    $('#content').append('<p>all over!</p>');
+                });
+            });
+
+            $('#dic').click(function () {
+                $.getJSON('./bible/dic.json').done(function (rst) {
+                    rst.forEach(function (item) {
+                        $('#content').append('<p>' + item.chapter + '</p>');
+                        $('#content').append('<p>' + item.summary + '</p>');
+                        
+                    });
+                })
+            });
+        })
+    </script>
+</body>
+</html>
