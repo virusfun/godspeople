@@ -389,11 +389,13 @@
                 var $p = $('<p></p>').append($btn);
                 
                 return $.getJSON('./bible/' + sections[i] + '.json').done(function (rst2) {
-                    $(cnt).append('<p><a>' + sections[i] + '</a></p>');
+                    var $div = $('<div></div>');
+                    $div.append('<p><a>' + sections[i] + '</a></p>');
                     rst2.forEach(function (item2) {
-                        $(cnt).append('<p style="text-align: left;"><a>' + item2.section + '</a> ' + (item2.zh == undefined ? '' : item2.zh) + '</p>');
+                        $div.append('<p style="text-align: left;"><a>' + item2.section + '</a> ' + (item2.zh == undefined ? '' : item2.zh) + '</p>');
                     });
-                    $(cnt).append($p).animate({ scrollTop: 0 }, 1000);
+                    $div.append($p);
+                    $(cnt).append($div);
                 });
             }
 
