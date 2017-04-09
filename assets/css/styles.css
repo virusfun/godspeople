@@ -436,7 +436,7 @@ footer {
         -webkit-background-clip: padding-box;
         -moz-background-clip: padding-box;
         background-clip: padding-box;
-        background: transparent url(../img/map.png) 0 0 no-repeat;
+        background: transparent url(../img/bible.png) 0 0 no-repeat;
         background-size: 60.5px 82.5px;
         position: absolute;
         display: block;
@@ -1083,7 +1083,7 @@ footer {
     min-height: 360px; }
 
   .about .panel header:before {
-    background-size: 66px 90px; }
+    background-size:  100px 104px; }
 
   .toggle {
     bottom: 12%; }
