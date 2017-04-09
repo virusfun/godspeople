@@ -151,222 +151,259 @@
     <script src="./assets/js/APlayer.min.js"></script>
     <script src="./assets/js/jquery.parallax.js"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
+        var app = function () {
+
+            var self = this;
 
             var swiper1, swiper2, swiper3;
-            
-            var init = {
-                layout: function () {
-                    var $html = $('html'), $container = $('#container'), $prompt = $('#prompt'), $toggle = $('#toggle'), $about = $('#about'), $scene = $('#scene');
 
-                    // Hide browser menu.
-                    (function () {
-                        setTimeout(function () { window.scrollTo(0, 0); }, 0);
-                    })();
+            this.layout = function () {
+                var $html = $('html'), $container = $('#container'), $prompt = $('#prompt'), $toggle = $('#toggle'), $about = $('#about'), $scene = $('#scene');
 
-                    // Setup FastClick.
-                    FastClick.attach(document.body);
+                // Hide browser menu.
+                (function () {
+                    setTimeout(function () { window.scrollTo(0, 0); }, 0);
+                })();
 
-                    // Add touch functionality.
-                    if (Hammer.HAS_TOUCHEVENTS) {
-                        $container.hammer({ drag_lock_to_axis: true });
-                        _.tap($html, 'a,button,[data-tap]');
+                // Setup FastClick.
+                FastClick.attach(document.body);
+
+                // Add touch functionality.
+                if (Hammer.HAS_TOUCHEVENTS) {
+                    $container.hammer({ drag_lock_to_axis: true });
+                    _.tap($html, 'a,button,[data-tap]');
+                }
+
+                // Add touch or mouse class to html element.
+                $html.addClass(Hammer.HAS_TOUCHEVENTS ? 'touch' : 'mouse');
+
+                // Resize handler.
+                (resize = function () {
+                    $scene[0].style.width = window.innerWidth + 'px';
+                    $scene[0].style.height = window.innerHeight + 'px';
+                    if (!$prompt.hasClass('hide')) {
+                        if (window.innerWidth < 600) {
+                            $toggle.addClass('hide');
+                        } else {
+                            $toggle.removeClass('hide');
+                        }
                     }
 
-                    // Add touch or mouse class to html element.
-                    $html.addClass(Hammer.HAS_TOUCHEVENTS ? 'touch' : 'mouse');
+                    var img = new Image();
+                    img.src = $('#cover').attr('src');
+                    img.onload = function () {
+                        var w = img.width;
+                        var h = img.height;
 
-                    // Resize handler.
-                    (resize = function () {
-                        $scene[0].style.width = window.innerWidth + 'px';
-                        $scene[0].style.height = window.innerHeight + 'px';
-                        if (!$prompt.hasClass('hide')) {
+                        function setCover(id, w, h) {
+                            var _height = $(id).parent().height(),
+                                _width = $(id).parent().width(),
+                                ratio = h / w;
+
+                            if (_height / _width > ratio) {
+                                id.style.height = _height * 1.1 + 'px';
+                                id.style.width = _height / ratio * 1.1 + 'px';
+                                //id.style.marginLeft = -0.5 * (_height / ratio - window.innerWidth) + 'px';
+
+                            } else {
+                                id.style.width = _width * 1.1 + 'px';
+                                id.style.height = _width * ratio * 1.1 + 'px';
+                            }
+
+                            id.style.left = (_width - parseInt(id.style.width)) / 2 + 'px';
+                            id.style.top = (_height - parseInt(id.style.height)) / 2 + 'px';
+                        }
+
+                        setCover($('#cover')[0], w, h)
+                    }
+                })();
+
+                // Attach window listeners.
+                window.onresize = _.debounce(resize, 200);
+                window.onscroll = _.debounce(resize, 200);
+
+                // Listen for toggle click event.
+                $toggle.on('click', function (event) {
+
+                    function showDetails() {
+                        $about.removeClass('hide');
+                        $toggle.removeClass('i');
+                    }
+
+                    function hideDetails() {
+                        $about.addClass('hide');
+                        $toggle.addClass('i');
+                    }
+
+                    $toggle.hasClass('i') ? showDetails() : hideDetails();
+                });
+
+                // Pretty simple huh?
+                $scene.parallax();
+
+                // Check for orientation support.
+                setTimeout(function () {
+                    if ($scene.data('mode') === 'cursor') {
+                        $prompt.removeClass('hide');
+                        if (window.innerWidth < 600) $toggle.addClass('hide');
+                        $prompt.on('click', function (event) {
+                            $prompt.addClass('hide');
                             if (window.innerWidth < 600) {
-                                $toggle.addClass('hide');
-                            } else {
-                                $toggle.removeClass('hide');
-                            }
-                        }
-
-                        var img = new Image();
-                        img.src = $('#cover').attr('src');
-                        img.onload = function () {
-                            var w = img.width;
-                            var h = img.height;
-
-                            function setCover(id, w, h) {
-                                var _height = $(id).parent().height(),
-                                    _width = $(id).parent().width(),
-                                    ratio = h / w;
-
-                                if (_height / _width > ratio) {
-                                    id.style.height = _height * 1.1 + 'px';
-                                    id.style.width = _height / ratio * 1.1 + 'px';
-                                    //id.style.marginLeft = -0.5 * (_height / ratio - window.innerWidth) + 'px';
-
-                                } else {
-                                    id.style.width = _width * 1.1 + 'px';
-                                    id.style.height = _width * ratio * 1.1 + 'px';
-                                }
-
-                                id.style.left = (_width - parseInt(id.style.width)) / 2 + 'px';
-                                id.style.top = (_height - parseInt(id.style.height)) / 2 + 'px';
-                            }
-
-                            setCover($('#cover')[0], w, h)
-                        }
-                    })();
-
-                    // Attach window listeners.
-                    window.onresize = _.debounce(resize, 200);
-                    window.onscroll = _.debounce(resize, 200);
-
-                    // Listen for toggle click event.
-                    $toggle.on('click', function (event) {
-
-                        function showDetails() {
-                            $about.removeClass('hide');
-                            $toggle.removeClass('i');
-                        }
-
-                        function hideDetails() {
-                            $about.addClass('hide');
-                            $toggle.addClass('i');
-                        }
-
-                        $toggle.hasClass('i') ? showDetails() : hideDetails();
-                    });
-
-                    // Pretty simple huh?
-                    $scene.parallax();
-
-                    // Check for orientation support.
-                    setTimeout(function () {
-                        if ($scene.data('mode') === 'cursor') {
-                            $prompt.removeClass('hide');
-                            if (window.innerWidth < 600) $toggle.addClass('hide');
-                            $prompt.on('click', function (event) {
-                                $prompt.addClass('hide');
-                                if (window.innerWidth < 600) {
-                                    setTimeout(function () {
-                                        $toggle.removeClass('hide');
-                                    }, 1200);
-                                }
-                            });
-                        }
-                    }, 1000);
-                },
-                tabs: function () {
-                    $('.links li').click(function () {
-                        $('.panel-item').removeClass('active');
-                        $('.links a').removeClass('active');
-                        $(this).find('a').addClass('active');
-                        var tab = $(this).attr('tab');
-                        $(tab).addClass('active');
-                        swiper1.update();
-                        swiper2.update();
-                        swiper3.update();
-                    })
-                    function fixd400SwiperBug(swiper) {
-                        if (window.innerWidth < 400) {
-                            var slide = swiper.slides[0];
-                            $(slide).parent().width($(slide).width());
-                        }
-                    }
-                    //tab1
-                    swiper1 = new Swiper('.swiper1', {
-                        autoHeight: true,
-                        nextButton: '.button-next1',
-                        prevButton: '.button-prev1',
-                        roundLengths : true,
-                        onInit: function (swiper) {
-                            fixd400SwiperBug(swiper)
-                        }
-                    });
-                    //tab2
-                    swiper2 = new Swiper('.swiper2', {
-                        autoHeight: true,
-                        nextButton: '.button-next2',
-                        prevButton: '.button-prev2',
-                        onInit: function (swiper) {
-                            fixd400SwiperBug(swiper)
-                        }
-                    });
-                    //tab3
-                    swiper3 = new Swiper('.swiper3', {
-                        loop: true,
-                        onInit: function (swiper) {
-                            fixd400SwiperBug(swiper)
-                        },
-                        onTransitionEnd: function (swiper) {
-                            var slide = swiper.slides[swiper.activeIndex];
-                            var src = $(slide).find('img').attr('src');
-                            $('#cover').attr('src', src);
-                        }
-                    });
-                    //tab4
-                    var ap1 = new APlayer({
-                        element: document.getElementById('player'),
-                        narrow: false,
-                        autoplay: false,
-                        showlrc: false,
-                        mutex: true,
-                        theme: '#e6d0b2',
-                        preload: 'metadata',
-                        mode: 'circulation',
-                        listmaxheight: '120px',
-                        music: [{
-                            title: 'Amazing Grace',
-                            author: 'Judy Collins',
-                            url: './assets/muisc/Amazing Grace.mp3',
-                            pic: './assets/muisc/Amazing Grace.jpg'
-                        }, {
-                            title: 'Pie Jesu',
-                            author: 'Sarah Brightman',
-                            url: './assets/muisc/Pie Jesu.mp3',
-                            pic: './assets/muisc/Pie Jesu.jpg'
-                        }]
-                    });
-                },
-                data: function () {
-                    return $.getJSON('./bible/dic.json').done(function (rst) {
-                        var dic = "#dic1";
-                        var cnt = "#cnt1";
-                        rst.forEach(function (item) {
-                            if (item.chapter == "") {
-                                dic = "#dic2";
-                                cnt = "#cnt2";
-                            } else {
-                                var $item = $('<p><a>' + item.chapter + item.summary + '</a></p>');
-                                $item.data('sections', item.sections);
-                                $item.data('cnt', cnt);
-                                $item.click(function () {
-                                    var cnt = $(this).data('cnt');
-                                    var sections = $(this).data('sections');
-                                    $(cnt).html('');
-                                    $.getJSON('./bible/' + sections[0] + '.json').done(function (rst2) {
-                                        rst2.forEach(function (item2) {
-                                            $(cnt).append('<p><a>' + item2.section + '</a> ' + (item2.zh == undefined ? '' : item2.zh) + '</p>');
-                                        });
-                                    }).done(function () {
-                                        if (cnt == '#cnt1') {
-                                            swiper1.slideNext();
-                                        } else if (cnt == '#cnt2') {
-                                            swiper2.slideNext();
-                                        }
-                                    });
-                                })
-                                $(dic).append($item);
+                                setTimeout(function () {
+                                    $toggle.removeClass('hide');
+                                }, 1200);
                             }
                         });
-                    })
-                }
+                    }
+                }, 1000);
             }
 
-            init.layout();
-            init.data().done(function () {
-                init.tabs();
-            })
+            this.tabs = function () {
+                $('.links li').click(function () {
+                    $('.panel-item').removeClass('active');
+                    $('.links a').removeClass('active');
+                    $(this).find('a').addClass('active');
+                    var tab = $(this).attr('tab');
+                    $(tab).addClass('active');
+                    swiper1.update();
+                    swiper2.update();
+                    swiper3.update();
+                })
+                function fixd400SwiperBug(swiper) {
+                    if (window.innerWidth < 400) {
+                        var slide = swiper.slides[0];
+                        $(slide).parent().width($(slide).width());
+                    }
+                }
+                //tab1
+                swiper1 = new Swiper('.swiper1', {
+                    autoHeight: true,
+                    nextButton: '.button-next1',
+                    prevButton: '.button-prev1',
+                    roundLengths: true,
+                    onInit: function (swiper) {
+                        fixd400SwiperBug(swiper)
+                    }
+                });
+                //tab2
+                swiper2 = new Swiper('.swiper2', {
+                    autoHeight: true,
+                    nextButton: '.button-next2',
+                    prevButton: '.button-prev2',
+                    onInit: function (swiper) {
+                        fixd400SwiperBug(swiper)
+                    }
+                });
+                //tab3
+                var bgcover = parseInt(localStorage.getItem('bgcover') == undefined ? 0 : localStorage.getItem('bgcover'));
+                swiper3 = new Swiper('.swiper3', {
+                    initialSlide: bgcover,
+                    onInit: function (swiper) {
+                        fixd400SwiperBug(swiper)
+                    },
+                    onSlideChangeEnd: function (swiper) {
+                        var slide = swiper.slides[swiper.activeIndex];
+                        var src = $(slide).find('img').attr('src');
+                        $('#cover').attr('src', src);
+                        //缓存封面
+                        localStorage.setItem('bgcover', swiper.activeIndex);
+                    }
+                });
+                //tab4
+                var ap1 = new APlayer({
+                    element: document.getElementById('player'),
+                    narrow: false,
+                    autoplay: false,
+                    showlrc: false,
+                    mutex: true,
+                    theme: '#e6d0b2',
+                    preload: 'metadata',
+                    mode: 'circulation',
+                    listmaxheight: '120px',
+                    music: [{
+                        title: 'Amazing Grace',
+                        author: 'Judy Collins',
+                        url: './assets/muisc/Amazing Grace.mp3',
+                        pic: './assets/muisc/Amazing Grace.jpg'
+                    }, {
+                        title: 'Pie Jesu',
+                        author: 'Sarah Brightman',
+                        url: './assets/muisc/Pie Jesu.mp3',
+                        pic: './assets/muisc/Pie Jesu.jpg'
+                    }]
+                });
+            }
+
+            this.dics = function () {
+                return $.getJSON('./bible/dic.json').done(function (rst) {
+                    var dic = "#dic1";
+                    var cnt = "#cnt1";
+                    rst.forEach(function (item) {
+                        if (item.chapter == "") {
+                            dic = "#dic2";
+                            cnt = "#cnt2";
+                        } else {
+                            var $item = $('<a>' + item.chapter + item.summary + '</a>');
+                            $item.data('sections', item.sections);
+                            $item.data('cnt', cnt);
+                            $item.click(function () {
+                                var cnt = $(this).data('cnt');
+                                var sections = $(this).data('sections');
+                                $(cnt).html('');
+
+                                self.sections(sections, 0, cnt).done(function () {
+                                    if (cnt == '#cnt1') {
+                                        swiper1.slideNext();
+                                    } else if (cnt == '#cnt2') {
+                                        swiper2.slideNext();
+                                    }
+                                });
+                            })
+                            var $p = $('<p></p>').append($item);
+                            $(dic).append($p);
+                        }
+                    });
+                })
+            }
+
+            this.sections = function (sections, i, cnt) {
+                $(cnt).html('');
+
+                var $btn;
+                if (i < sections.length - 1) {
+                    $btn = $('<a>下一节</a>')
+                    $btn.click(function () {
+                        self.sections(sections, i + 1, cnt);
+                    });
+                } else {
+                    $btn = $('<a>本节完</a>')
+                    $btn.click(function () {
+                        if (cnt == '#cnt1') {
+                            swiper1.slidePrev();
+                        } else if (cnt == '#cnt2') {
+                            swiper2.slidePrev();
+                        }
+                    });
+                }
+                var $p = $('<p></p>').append($btn);
+                
+                return $.getJSON('./bible/' + sections[i] + '.json').done(function (rst2) {
+                    $(cnt).append('<p><a>' + sections[i] + '</a></p>');
+                    rst2.forEach(function (item2) {
+                        $(cnt).append('<p style="text-align: left;"><a>' + item2.section + '</a> ' + (item2.zh == undefined ? '' : item2.zh) + '</p>');
+                    });
+                    $(cnt).append($p).animate({ scrollTop: 0 }, 1000);
+                });
+            }
+
+        }
+
+        $(document).ready(function () {
+            var app1 = new app();
+            app1.layout();
+            app1.dics().done(function () {
+                app1.tabs();
+            });
         })
     </script>
 
