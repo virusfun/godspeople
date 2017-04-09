@@ -441,7 +441,7 @@ footer {
         position: absolute;
         display: block;
         height: 150px;
-        width: 110px;
+        width: 119px;
         opacity: 0.8;
         content: "";
         left: 0;
@@ -1083,7 +1083,7 @@ footer {
     min-height: 360px; }
 
   .about .panel header:before {
-    background-size:  100px 104px; }
+    background-size:  88px 88px; }
 
   .toggle {
     bottom: 12%; }
