@@ -671,7 +671,15 @@ footer {
   margin-top: -0.7em;
   position: absolute;
   width: 100%;
-  top: 42%; }
+  top: 36%; }
+
+.quotes {
+  text-shadow: 0 8px 6px rgba(0, 0, 0, 0.6);
+  margin-top: -0.7em;
+  padding:1em;
+  position: absolute;
+  top: 46%; 
+}
 
 .background {
   background: url(../../images/background.jpg) no-repeat 50% 100%;
